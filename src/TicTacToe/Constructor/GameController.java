@@ -1,9 +1,7 @@
 package TicTacToe.Constructor;
 
 import TicTacToe.ENUMS.GAME_STATE;
-import TicTacToe.Entity.Board;
 import TicTacToe.Entity.Game;
-import TicTacToe.Entity.Move;
 import TicTacToe.Entity.Player;
 import TicTacToe.Exceptions.InvalidBotCountException;
 import TicTacToe.Exceptions.InvalidPlayerCountException;
@@ -11,7 +9,7 @@ import TicTacToe.Strategy.WINNING_STRATEGY.winningStrategy;
 
 import java.util.List;
 
-public class Game_Constructor {
+public class GameController {
     public Game startGame(int size, List<Player> players, List<winningStrategy> winningStrategy) throws InvalidBotCountException, InvalidPlayerCountException {
         return Game.getBuilder()
                 .setSize(size)
@@ -33,11 +31,5 @@ public class Game_Constructor {
     }
     public void Undo(Game game) {
        // game.undo();
-
     }
 }
-//start_game
-//getCurrentPlayer
-//makeMove
-//displayBoard
-//checkState
