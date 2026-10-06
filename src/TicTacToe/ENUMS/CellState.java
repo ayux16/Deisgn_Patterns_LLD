@@ -1,6 +1,6 @@
 package TicTacToe.ENUMS;
 
-public enum CELL_STATE {
+public enum CellState {
     IS_EMPTY,
     IS_FILLED
 }

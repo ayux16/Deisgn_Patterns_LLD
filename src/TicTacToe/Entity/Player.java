@@ -3,11 +3,10 @@ import TicTacToe.ENUMS.PLAYER_TYPE;
 
 import java.util.Scanner;
 
-public class Player {
+public abstract class Player {
     private String Name;
     private Symbol symbol;
     private PLAYER_TYPE player;
-    private static Scanner sc = new Scanner(System.in);
 
     public Player(String name, Symbol Symbol, PLAYER_TYPE player) {
         this.Name = name;
@@ -26,6 +25,8 @@ public class Player {
     public Symbol getSymbol() {
         return symbol;
     }
+
+
 
     public void setSymbol(Symbol symbol) {
         this.symbol = symbol;

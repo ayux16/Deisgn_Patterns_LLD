@@ -1,33 +1,25 @@
 package TicTacToe.Entity;
 
-import TicTacToe.ENUMS.CELL_STATE;
+import TicTacToe.ENUMS.CellState;
 
 public class Cell {
     private int row;
     private int col;
     private Player player;
-    private CELL_STATE state;
+    private CellState state;
 
     public Cell(int row, int col) {
         this.row = row;
         this.col = col;
-        this.state=CELL_STATE.IS_EMPTY;
+        this.state=CellState.IS_EMPTY;
     }
 
-    public CELL_STATE getState() {
-        return state;
+    public int getRow() {
+        return row;
     }
 
-    public void setState(CELL_STATE state) {
-        this.state = state;
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
+    public void setRow(int row) {
+        this.row = row;
     }
 
     public int getCol() {
@@ -38,11 +30,27 @@ public class Cell {
         this.col = col;
     }
 
-    public int getRow() {
-        return row;
+    public Player getPlayer() {
+        return player;
     }
 
-    public void setRow(int row) {
-        this.row = row;
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public CellState getState() {
+        return state;
+    }
+
+    public void setState(CellState state) {
+        this.state = state;
+    }
+    public void display(){
+        if(this.state.equals(CellState.IS_EMPTY)) {
+            System.out.print("|  |");
+        }
+        else{
+            System.out.println("| " + this.getPlayer().getSymbol().getSymbol() + " |");
+        }
     }
 }

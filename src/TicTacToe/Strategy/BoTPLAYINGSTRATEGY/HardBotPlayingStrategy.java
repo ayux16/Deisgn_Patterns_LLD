@@ -3,8 +3,7 @@ package TicTacToe.Strategy.BoTPLAYINGSTRATEGY;
 import TicTacToe.Entity.Board;
 import TicTacToe.Entity.Cell;
 import TicTacToe.Entity.Move;
-import TicTacToe.Entity.Player;
-import TicTacToe.ENUMS.CELL_STATE;
+import TicTacToe.ENUMS.CellState;
 
 import java.util.List;
 
@@ -14,13 +13,13 @@ public class HardBotPlayingStrategy implements Bot_Playing_Strategy {
     public Move makeMove(Board board) {
 
         int size = board.getSize();
-        List<List<Cell>> cells = board.getBoard();
+        List<List<Cell>> cells = board.getCell();
 
         // 1. Center
         if (size % 2 == 1) {
             int center = size / 2;
 
-            if (cells.get(center).get(center).getState() == CELL_STATE.IS_EMPTY) {
+            if (cells.get(center).get(center).getState() == CellState.IS_EMPTY) {
                 return new Move(null, cells.get(center).get(center));
             }
         }
@@ -37,7 +36,7 @@ public class HardBotPlayingStrategy implements Bot_Playing_Strategy {
             int row = corner[0];
             int col = corner[1];
 
-            if (cells.get(row).get(col).getState() == CELL_STATE.IS_EMPTY) {
+            if (cells.get(row).get(col).getState() == CellState.IS_EMPTY) {
                 return new Move(null, cells.get(row).get(col));
             }
         }
@@ -46,7 +45,7 @@ public class HardBotPlayingStrategy implements Bot_Playing_Strategy {
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
 
-                if (cells.get(row).get(col).getState() == CELL_STATE.IS_EMPTY) {
+                if (cells.get(row).get(col).getState() == CellState.IS_EMPTY) {
                     return new Move(null, cells.get(row).get(col));
                 }
             }

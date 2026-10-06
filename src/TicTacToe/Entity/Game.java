@@ -1,6 +1,6 @@
 package TicTacToe.Entity;
 
-import TicTacToe.ENUMS.CELL_STATE;
+import TicTacToe.ENUMS.CellState;
 import TicTacToe.ENUMS.GAME_STATE;
 import TicTacToe.ENUMS.PLAYER_TYPE;
 import TicTacToe.Exceptions.InvalidBotCountException;
@@ -14,7 +14,7 @@ public class Game {
     private Board board;
     private List<Player> players;
     private List<Move> moves;
-    private int currentPlayer;
+    private int nextTurnIndex;
     private Player winner;
     private GAME_STATE gameState;
     private List<winningStrategy> winningStrategies;
@@ -23,9 +23,8 @@ public class Game {
         this.board = new Board(size);
         this.players = player;
         this.winningStrategies = winningStrategy;
-        this.moves = new ArrayList<Move>();
-        this.currentPlayer = 0;
-        this.winner = null;
+        this.moves = new ArrayList<>();
+        this.nextTurnIndex = 0;
         this.gameState = GAME_STATE.IN_PROGRESS;
     }
     public static GameBuilder getBuilder(){
@@ -39,6 +38,19 @@ public class Game {
             this.players = players;
             return this;
         }
+
+        public List<Player> getPlayers() {
+            return players;
+        }
+
+        public List<winningStrategy> getWinningStrategies() {
+            return winningStrategies;
+        }
+
+        public int getSize() {
+            return size;
+        }
+
         public GameBuilder setWinningStrategies(List<winningStrategy> winningStrategies){
             this.winningStrategies = winningStrategies;
             return this;
@@ -79,101 +91,89 @@ public class Game {
         }
 
     }
-    public boolean isValid(Move move){
-        Cell cell= move.getCell();
-        int row= cell.getRow();
-        int col= cell.getCol();
-        if(row<0 || col<0 || row>=board.getSize() || col>=board.getSize()){
-            return false;
-        }
-        else if(board.getBoard().get(row).get(col).getState() == CELL_STATE.IS_FILLED){
-            return false;
-        }
-        return true;
-
+    public Board getBoard() {
+        return board;
     }
-    public void makeMove(){
-       Player playerToMakeMove= players.get(currentPlayer);
-       Move move=playerToMakeMove.makeMove(board);
-       if(!isValid(move)){
-           throw new IllegalArgumentException("Invalid Move");
-       }
-       int row=move.getCell().getRow();
-       int col=move.getCell().getCol();
-       Cell cell= board.getBoard().get(row).get(col);
-       cell.setPlayer(playerToMakeMove);
-       cell.setState(CELL_STATE.IS_FILLED);
-       Move finalMove= new Move(playerToMakeMove, cell);
-       moves.add(finalMove);
-       currentPlayer= (currentPlayer + 1) % players.size();
+    public void setBoard(Board board) {
+        this.board = board;
+    }
 
-       if(checkWinner(finalMove)){
-           winner= playerToMakeMove;
-           gameState= GAME_STATE.SUCCESS;
-       }
-       else if(moves.size() == board.getSize() * board.getSize()){
-           gameState= GAME_STATE.DRAW;
-       }
+    public List<Player> getPlayers() {
+        return players;
+    }
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+    }
+
+    public List<Move> getMoves() {
+        return moves;
+    }
+    public void setMoves(List<Move> moves) {
+        this.moves = moves;
+    }
+
+    public Player getWinner() {
+        return winner;
+    }
+    public void setWinner(Player winner) {
+        this.winner = winner;
+    }
+
+    public GAME_STATE getGameState() {
+        return gameState;
+    }
+    public void setGameState(GAME_STATE gameState) {
+        this.gameState = gameState;
+    }
+
+    public int getNextTurnIndex() {
+        return nextTurnIndex;
+    }
+    public void setNextTurnIndex(int nextTurnIndex) {
+        this.nextTurnIndex = nextTurnIndex;
+    }
+
+    public List<winningStrategy> getWinningStrategies() {
+        return winningStrategies;
+    }
+    public void setWinningStrategies(List<winningStrategy> winningStrategies) {
+        this.winningStrategies = winningStrategies;
+    }
+
+
+    public void makeMove(){
+        Player currentPlayer=players.get(nextTurnIndex);
+        System.out.println("This is "+currentPlayer.getName()+" move");
+        Move move=currentPlayer.makeMove(board);
+        nextTurnIndex =(nextTurnIndex + 1) % players.size();
+        //fill the cell in the board
+        Cell cell=move.getCell();
+        int row=cell.getRow();
+        int col=cell.getCol();
+        Cell currentCell=this.board.getCell().get(row).get(col);
+        currentCell.setPlayer(currentPlayer);
+        currentCell.setState(CellState.IS_FILLED);
+
+        //save the move
+        this.moves.add(move);
+
+        //Check winner after every move.
+        if(checkWinner(move)){
+            this.winner=currentPlayer;
+            this.gameState=GAME_STATE.SUCCESS;
+        }
+        else if(moves.size()==this.board.getSize()*this.board.getSize()){
+            this.gameState=GAME_STATE.DRAW;
+        }
+
     }
     private boolean checkWinner(Move move){
         for(winningStrategy winningStrategy: winningStrategies){
-            if(winningStrategy.check(move,board)){
+            if(winningStrategy.check(move,this.board)){
                 return true;
             }
         }
         return false;
     }
 
-    public Board getBoard() {
-        return board;
-    }
-
-
-    public List<Player> getPlayers() {
-        return players;
-    }
-
-
-    public List<Move> getMoves() {
-        return moves;
-    }
-
-
-    public int getCurrentPlayer() {
-        return currentPlayer;
-    }
-
-
-    public Player getWinner() {
-        return winner;
-    }
-
-
-    public GAME_STATE getGameState() {
-        return gameState;
-    }
-
-    public void setBoard(Board board) {
-        this.board = board;
-    }
-
-    public void setPlayers(List<Player> players) {
-        this.players = players;
-    }
-
-    public void setMoves(List<Move> moves) {
-        this.moves = moves;
-    }
-
-    public void setCurrentPlayer(int currentPlayer) {
-        this.currentPlayer = currentPlayer;
-    }
-
-    public void setWinner(Player winner) {
-        this.winner = winner;
-    }
-
-    public void setGameState(GAME_STATE gameState) {
-        this.gameState = gameState;
-    }
 }
